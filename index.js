@@ -13,14 +13,27 @@ app.get('/', function (req, res) {
 
 app.post("/", function (req, res) {
     // console.log(req.body.crypto);
-    request("https://apiv2.bitcoinaverage.com/indices/global/ticker/BTCUSD", function (error, response, body) {
+    
+    var crypto = req.body.crypto; 
+    var fiat = req.body.fiat; 
+    
+    var baseURL = "https://apiv2.bitcoinaverage.com/indices/global/ticker/";
+    
+    var finalURL = baseURL + crypto + fiat;
+    
+    request(finalURL, function (error, response, body) {
         // console.log(body)
 
         var data = JSON.parse(body); // need to change this from json to js object
         var price = data.last
 
-        res.send("<h1> The current price of bitcoin is " + price + " USD </h1>")
-        console.log(price);
+        var currentDate = data.display_timestamp;
+        
+        res.write("<p>The current date is " + currentDate + "</p>");
+        res.write("<h1> The current price of " + crypto + " is " + price +  fiat + "</h1>")
+
+        res.send()
+        // console.log(price);
 
     });
 });
